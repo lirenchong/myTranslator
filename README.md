@@ -27,7 +27,7 @@
 
 
 #  主要贡献者
-* 李仁冲
+* [李仁冲](https://github.com/lirenchong)
 * [不是船长](https://github.com/Captain2021)
 
  
