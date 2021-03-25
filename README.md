@@ -14,7 +14,7 @@
 ## 已新增
 
 ## 已优化
-### [豆瓣](https://www.douban.com/)→[DouBan.js](https://github.com/Captain2021/myTranslator/blob/master/Douban.js)
+### [豆瓣.js](https://github.com/Captain2021/myTranslator/blob/master/Douban.js)
 - [x] 优化标题：《书名》+豆瓣评分+短评人数
 - [x] 优化摘要：内容简介+作者简介
 - [x] 优化其他：豆瓣评分（方便排序）
