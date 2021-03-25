@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2021-03-25 07:02:22"
+	"lastUpdated": "2021-03-25 10:26:52"
 }
 
 /*
@@ -194,21 +194,36 @@ function scrapeAndParse(doc, url) {
 		newItem.extra = dbScore
 
 		// 标签
-		var tags = ZU.xpath(doc, '//div[@id="db-tags-section"]/div//a');
+		var tags = ZU.xpath(doc, '//div[@class="intro"]');
 		for (let i in tags) {
 			newItem.tags.push(tags[i].textContent);
 		}
 		
 		// 作者简介
-		let authorInfo = ZU.xpathText(doc, '//*[@id="content"]/div/div[1]/div[3]/div[2]/span[2]/div/p/text()');
-
-		// 内容简介
-		let contentInfo = ZU.xpathText(doc, '//*[@id="link-report"]/div[1]/div/p/text()')
-		let abstractNoteTemp = "-------------作者简介:-------------"+authorInfo+
-		"-------------内容简介:-------------"+contentInfo
+		// 获取展开全部按钮里面的内容
+		let authorInfoList = ZU.xpath(doc, '//*[@id="content"]/div/div[1]/div[3]/div[2]/span[2]/div')
+		let authorInfo = ""
+		if (authorInfoList.length === 0){ 
+			authorInfo = ZU.xpathText(doc, '//*[@id="content"]/div/div[1]/div[3]/div[2]/div/div/p');
+		} else {
+			authorInfo = authorInfoList[0].innerText
+		}
 		
+		// 内容简介
+		// 获取展开全部按钮里面的内容
+		let contentInfoList = ZU.xpath(doc, '//*[@id="link-report"]/span[2]/div/div')
+		if (contentInfoList.length === 0){ // 获取展开全部按钮里面的内容
+			contentInfo = ZU.xpath(doc, '//*[@id="link-report"]')[0].innerText
+		} else {
+			contentInfo = contentInfoList[0].innerText
+		}
+		
+		let abstractNoteTemp = "作者简介:"+"\n"+authorInfo+"\n\n"+
+		"内容简介:"+"\n"+contentInfo
+
 		newItem.abstractNote = abstractNoteTemp
 		newItem.complete();
+		
 	});
 }
 // #########################
