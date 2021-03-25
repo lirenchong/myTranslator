@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2021-03-25 10:26:52"
+	"lastUpdated": "2021-03-25 14:44:34"
 }
 
 /*
@@ -86,7 +86,7 @@ function scrapeAndParse(doc, url) {
 		// Z.debug('=============commentNum=============')
 		// Z.debug(commentNum)
 		
-		let titleTemp= "-"+dbScore+"分"+"-"+commentNum+"短评"
+		let titleTemp= commentNum+" "+"评"+" "+dbScore
 		
 		// 标题
 		pattern = /<h1>([\s\S]*?)<\/h1>/;
@@ -105,7 +105,6 @@ function scrapeAndParse(doc, url) {
 		}
 
 		// 作者
-
 		page = page.replace(/\n/g, "");
 		// Z.debug(page)
 		pattern = /<span>\s*<span[^>]*?>\s*作者<\/span>:(.*?)<\/span>/;
@@ -129,6 +128,9 @@ function scrapeAndParse(doc, url) {
 					"author", useComma));
 			}
 		}
+// Z.debug('=============authorNames=============')
+// Z.debug(authorNames)
+		
 
 		// 译者
 		pattern = /<span>\s*<span [^>]*?>\s*译者<\/span>:(.*?)<\/span>/;
@@ -209,6 +211,8 @@ function scrapeAndParse(doc, url) {
 			authorInfo = authorInfoList[0].innerText
 		}
 		
+Z.debug('=============authorInfo=============')
+Z.debug(authorInfo)
 		// 内容简介
 		// 获取展开全部按钮里面的内容
 		let contentInfoList = ZU.xpath(doc, '//*[@id="link-report"]/span[2]/div/div')
@@ -218,11 +222,14 @@ function scrapeAndParse(doc, url) {
 			contentInfo = contentInfoList[0].innerText
 		}
 		
+Z.debug('=============contentInfo=============')
+Z.debug(contentInfo)
+
 		let abstractNoteTemp = "作者简介:"+"\n"+authorInfo+"\n\n"+
 		"内容简介:"+"\n"+contentInfo
 
 		newItem.abstractNote = abstractNoteTemp
-		newItem.complete();
+		// newItem.complete();
 		
 	});
 }
