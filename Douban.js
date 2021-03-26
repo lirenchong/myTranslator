@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2021-03-25 14:44:34"
+	"lastUpdated": "2021-03-26 14:53:01"
 }
 
 /*
@@ -193,7 +193,7 @@ function scrapeAndParse(doc, url) {
 		}
 		
 		// 其他
-		newItem.extra = dbScore
+		newItem.extra = "D"+dbScore
 
 		// 标签
 		var tags = ZU.xpath(doc, '//div[@class="intro"]');
@@ -202,34 +202,39 @@ function scrapeAndParse(doc, url) {
 		}
 		
 		// 作者简介
-		// 获取展开全部按钮里面的内容
-		let authorInfoList = ZU.xpath(doc, '//*[@id="content"]/div/div[1]/div[3]/div[2]/span[2]/div')
-		let authorInfo = ""
-		if (authorInfoList.length === 0){ 
-			authorInfo = ZU.xpathText(doc, '//*[@id="content"]/div/div[1]/div[3]/div[2]/div/div/p');
-		} else {
-			authorInfo = authorInfoList[0].innerText
+		let authorInfoList = ZU.xpath(doc, "//span[text()='作者简介']/parent::h2/following-sibling::div//div[@class='intro']")
+		// 这里会获取平级的元素,当有多个时(有展开全部按钮)取最后一个
+		let authorInfo = authorInfoList[authorInfoList.length-1].innerHTML
+		// 正则提取<p>标签里面的元素,并添加换行
+		let authorInfotwo = ""
+		authorInfo = authorInfo.match(/<[a-zA-Z]+.*?>([\s\S]*?)<\/[a-zA-Z]+.*?>/g)
+		for(i=0;i<authorInfo.length;i++){
+		authorInfo[i] = authorInfo[i].match(/<[a-zA-Z]+.*?>([\s\S]*?)<\/[a-zA-Z]+.*?>/g)
+		authorInfotwo = authorInfotwo+RegExp.$1+"\n"
 		}
+		// Z.debug('=============authorInfo=============')
+		// Z.debug(authorInfotwo)
 		
-Z.debug('=============authorInfo=============')
-Z.debug(authorInfo)
 		// 内容简介
 		// 获取展开全部按钮里面的内容
-		let contentInfoList = ZU.xpath(doc, '//*[@id="link-report"]/span[2]/div/div')
-		if (contentInfoList.length === 0){ // 获取展开全部按钮里面的内容
-			contentInfo = ZU.xpath(doc, '//*[@id="link-report"]')[0].innerText
-		} else {
-			contentInfo = contentInfoList[0].innerText
+		let contentInfoList = ZU.xpath(doc, "//span[text()='内容简介']/parent::h2/following-sibling::div[@id='link-report']//div[@class='intro']")
+		let contentInfo = contentInfoList[contentInfoList.length-1].innerHTML
+		let contentInfoTwo = ""
+		contentInfo = contentInfo.match(/<[a-zA-Z]+.*?>([\s\S]*?)<\/[a-zA-Z]+.*?>/g)
+		for(i=0;i<contentInfo.length;i++){
+		contentInfo[i] = contentInfo[i].match(/<[a-zA-Z]+.*?>([\s\S]*?)<\/[a-zA-Z]+.*?>/g)
+		contentInfoTwo = contentInfoTwo+RegExp.$1+"\n"
 		}
+		// Z.debug('=============contentInfoTwo=============')
+		// Z.debug(contentInfoTwo)
 		
-Z.debug('=============contentInfo=============')
-Z.debug(contentInfo)
-
-		let abstractNoteTemp = "作者简介:"+"\n"+authorInfo+"\n\n"+
-		"内容简介:"+"\n"+contentInfo
+		
+		
+		let abstractNoteTemp = "作者简介:"+"\n"+authorInfotwo+"\n"+
+		"内容简介:"+"\n"+contentInfoTwo
 
 		newItem.abstractNote = abstractNoteTemp
-		// newItem.complete();
+		newItem.complete();
 		
 	});
 }
